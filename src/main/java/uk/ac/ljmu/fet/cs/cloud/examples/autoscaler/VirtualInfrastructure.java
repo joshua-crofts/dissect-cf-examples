@@ -98,6 +98,12 @@ public abstract class VirtualInfrastructure extends Timed implements VirtualMach
 	private final ArrayDeque<String> obsoleteVAs = new ArrayDeque<String>();
 
 	/**
+	 * Used to store the total simulated price when using CustomVI as the scaler
+	 */
+	public double consumedTotal = 0;
+	
+	
+	/**
 	 * Initialises the auto scaling mechanism
 	 * 
 	 * @param cloud the physical infrastructure to use to rent the VMs from
@@ -259,4 +265,13 @@ public abstract class VirtualInfrastructure extends Timed implements VirtualMach
 			vm.unsubscribeStateChange(this);
 		}
 	}
+	
+	/**
+	 * Getter for consumedTotal
+	 * @return consumedTotal - The total price of a simulation
+	 */
+	public double getTotalPrice() {
+		return consumedTotal;
+	}
+	
 }

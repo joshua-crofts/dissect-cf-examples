@@ -83,6 +83,13 @@ public class AutoScalingDemo implements TraceExhaustionCallback {
 	 * with the help of a job launcher and queueing mechanism.
 	 */
 	private final JobArrivalHandler jobhandler;
+	
+	/**
+	 * The boolean used to allow the simulated cost stat to be show
+	 * only works with CustomVI
+	 */
+	private boolean extraDisplay = false;
+	
 
 	/**
 	 * Callback handler to do finalise the simulation once all jobs have completed.
@@ -123,7 +130,12 @@ public class AutoScalingDemo implements TraceExhaustionCallback {
 		System.err.println("Using the auto scaler: " + viclass.getName());
 		vi = viclass.getConstructor(IaaSService.class).newInstance(cloud);
 		vi.startAutoScaling();
-
+		//Check to see if the class being used in CustomVI
+		if(viclass.getName().contains("CustomVI")) {
+			extraDisplay = true;
+		}
+		
+		
 		// Simple job dispatching mechanism which first prepares the workload
 		Progress progress = new Progress(this);
 		JobLauncher launcher = new FirstFitJobScheduler(vi, progress);
@@ -168,6 +180,12 @@ public class AutoScalingDemo implements TraceExhaustionCallback {
 		System.out.println("Average queue time: " + jobhandler.getAverageQueueTime() + " s");
 		System.out.println("Number of virtual appliances registered at the end of the simulation: "
 				+ cloud.repositories.get(0).contents().size());
+		//If CustomVI is being used the simulated price can be displayed
+		if(extraDisplay){
+		System.out.println("Total simulated price: £" + vi.getTotalPrice());	
+		}
+		
+		
 	}
 
 	/**
